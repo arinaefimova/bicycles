@@ -1,0 +1,738 @@
+@use "sass:math";
+
+
+// Подключение миксинов ===========================================================================================================================================================================================================================================================================
+@import "base/mixins";
+
+@mixin flexboxinline(){display: -webkit-box; display: -moz-box; display:-ms-flexbox; display: -webkit-flex; display: inline-flex; font-size: 0; }
+@mixin flexbox(){display: -webkit-box; display: -moz-box; display:-ms-flexbox; display: -webkit-flex; display: flex; font-size: 0; }
+@mixin anim ($time,$delay){-webkit-transition:all $time ease $delay; -moz-transition:all $time ease $delay; -ms-transition:all $time ease $delay; -o-transition:all $time ease $delay;}
+@mixin flexorder($val){-webkit-box-ordinal-group: $val; -moz-box-ordinal-group: $val; -ms-flex-order:$val; -webkit-order:$val; order:$val;}
+// Подключение миксинов ===========================================================================================================================================================================================================================================================================
+
+
+
+// Подключение шрифтов ===========================================================================================================================================================================================================================================================================
+//&display=swap - добавить при подключении через плагин
+@import "fonts";
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+// Подключение шрифтов ===========================================================================================================================================================================================================================================================================
+
+
+// Шрифт по умолчанию ==============================================================================================================================================================================================================================================================================
+$fontFamily: "Lato";
+$fontSize: rem(14); // где 14(px) - размер шрифта по умолчанию из макета
+// Шрифт по умолчанию ==============================================================================================================================================================================================================================================================================
+
+
+
+
+
+// Переменные ===============================================================================================================================================================================================================================================================================================
+// Минимальная ширина страницы
+$minWidth: 320;// Минимальная ширина страницы
+
+
+
+
+
+// Ширина полотна (макета)
+$maxWidth: 1920;
+// Ширина ограничивающего контейнера (0 = нет ограничения)
+$maxWidthContainer: 1100;
+// Общий отступ у контейнера
+// (30 = по 15px слева и справа, 0 = нет отступа)
+$containerPadding: 30;
+
+// Ширина срабатывания первого брейкпоинта
+$containerWidth: $maxWidthContainer + $containerPadding;
+
+// Основные цвета
+$mainColor: #000; // Цвет шрифта по умолчанию
+
+// Брейк-поинты
+$pc: em($containerWidth); // ПК, ноутбуки, некоторые планшеты в горизонтальном положении
+$tablet: em(991.98); // Планшеты, некоторые телефоны в горизонтальном положении
+$mobile: em(767.98); // Телефоны L
+$mobileSmall: em(479.98); // Телефоны S
+
+// Тип адаптива:
+// 1 = отзывчивость (у контейнера нет брейкпоинтов),
+// 2 = по брейк-поинтам (контейнер меняет свою ширину по брейк-поинтам)
+$responsiveType: 1;
+
+
+// Обнуление и общие параметры ============================================================================================================================================================================================== =============================================================================================== ===============================================================================================
+@import "base/null";
+// Обнуление и общие параметры ============================================================================================================================================================================================== =============================================================================================== ===============================================================================================
+
+
+
+body {
+	// Скролл заблокирован
+	.lock & {
+		overflow: hidden;
+		touch-action: none;
+	}
+	// Сайт загружен
+	.loaded & {
+	}
+}
+// Оболочка ============================================================================================================================================================================================================================================================================================================================================================================================================================================
+.wrapper {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	// Прижимаем footer
+	> main {
+		flex: 1 1 auto;
+	}
+	// Фикс для слайдеров
+	> * {
+		min-width: 0;
+	}
+}
+//HEADER==================================================================================================================================================================================================================
+.header {
+	position: absolute;
+	width: 100%;
+	z-index: 50;
+	left: 0;
+	top: 35px;
+	&__row {
+	@include flexbox();
+	justify-content: center;
+	align-items: center;
+	height: 85px;
+}
+	&__menu {}
+	&__logo {
+		position: absolute;
+		top: 0px;
+		left: 50%;
+		z-index: 2;
+		transform:translate3d(-50%,0px,0px);
+	}
+	@media (max-width:767px) {
+		top: 15px;
+	}
+}
+.menu {
+	&__icon {}
+	&__body {}
+	&__list {
+		@include flexbox();
+		li{
+			position: relative;
+			padding:0px 37.5px;
+			&:nth-child(2){
+				padding:0px 110px 0px 37.5px;
+			}
+			&:nth-child(3){
+				padding:0px 37.5px 0px 110px;
+			}
+			&:after{
+				content: '';
+				width: 4px;
+				height: 4px;
+				background-color: #4d4959;
+				border-radius: 50%;
+				position: absolute;
+				right: 0px;
+				top: 50%;
+				margin: -2px 0px 0px 0px;
+
+
+			}
+			&:nth-child(2),
+			&:last-child{
+				&:after{display: none;}
+			}
+		}
+
+	}
+	&__link {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 2.6px;
+	color: #4d4959;
+	text-transform: uppercase;
+    display: inline-block;
+    position: relative;
+    &::before{
+        content:'';
+        width: 0;
+        position: absolute;
+        bottom: rem(-10);
+        left: 0;
+        height: rem(2);
+        background-color:#4d4959;
+        transition: all 0.7s linear 0s;
+        border-radius: 2px;
+       
+        
+    }
+    @media (any-hover: hover){
+        &:hover{
+            &::before{                
+                width: 100%; 
+            }
+        }
+    }
+	}
+
+	@media (max-width:767px) {
+		&__body {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			overflow: auto;
+			background-color: #4d4959;
+			padding: 150px 0px 0px 0px;
+			transform:translate3d(0px,-100%,0px);
+			animation: pulse 0.3s infinite 0s;
+			&.active{
+				transform:translate3d(0px,0px,0px);
+			}
+
+		}
+		&__list {
+			flex-direction:column;
+			justify-content: center;
+			align-items: center;
+			li{
+				padding:0px 0px 35px 0px !important;
+
+			&:after{
+				width: 4px;
+				height: 4px;
+				background-color: #fff;
+				right: 50%;
+				top: 40px;
+				margin: 0px -2px 0px 0px;
+			}
+			&:nth-child(2){
+				&:after{display: block;}
+			}
+			}
+
+		}
+		&__link {
+			color: #fff;
+			font-size: 24px;
+		}
+	}
+
+}
+
+.icon-menu {
+	@media (max-width:767px) {
+		display: block;
+		position: absolute;
+		top: 24px;
+		right: 10px;
+		width: 30px;
+		height: 18px;
+		cursor: pointer;
+		z-index: 5;
+		span{animation: pulse 0.3s infinite 0s;; top: 8px; left: 0;position: absolute; width: 100%; height: 2px;background-color: #fff;
+			&:first-child{top: 0px;}
+			&:last-child{top: auto; bottom: 0px;}
+		}
+		&.active{
+			span{transform: scale(0);
+				&:first-child{transform:rotate(-45deg); top:8px;}
+				&:last-child{transform:rotate(45deg); bottom:8px;}
+			}
+		}
+	}
+}
+
+
+//HEADER==================================================================================================================================================================================================================
+//ОСНОВНАЯ ЧАСТЬ==================================================================================================================================================================================================================
+
+
+
+.page {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	@include flexbox();
+	flex-direction:column;
+}
+.main-screen {
+	flex:1 0 100%;
+	position: relative;
+	&__bg {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+}
+.content{
+	font-size: 20px;
+}
+
+// ======================================
+.generation {
+	padding:120px 0px;
+	background-color: #f7f7f7;
+	@media (max-width:480px) {
+		padding:100px 0px;
+	}
+	&__block {
+		
+	}
+}
+.block {
+	text-align: center;
+	&__icon {
+		margin: 0px 0px 33px 0px;
+	}
+	&__title {
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 3.6px;
+	text-transform: uppercase;
+	color: #353738;
+	margin: 0px 0px 20px 0px;
+	@media (max-width:480px) {
+		line-height: 30px;
+	}
+	}
+	&__text {
+	font-size: 18px;
+	line-height: 34px;
+	color: #848789;
+	&__j {
+		text-align: justify;
+		font-size: 16px;
+		line-height: 30px;
+		&:after{
+			content: '';
+			display: block;
+			margin: 35px auto 0px auto;
+			width: 55px;
+			height: 2px;
+			background-color: #ebebeb;
+		}
+	  }
+	}
+}
+// ====================================
+.brands {
+	&_rev {
+		.brands__column{
+			@include flexorder(1);
+			&_b{
+				@include flexorder(2);
+			}
+		}
+	}
+	&_last{}
+	&__row {
+		@include flexbox();
+
+	}
+	&__column {
+		flex: 0 1 33.33333%;
+		&_b {
+			flex: 0 1 66.667%;
+		}
+	}
+	&__content {
+		padding:70px 65px 55px 65px;
+		position: relative;
+		&:after{
+			content:'';
+			position: absolute;
+			left: 50%;
+			bottom: -10px;
+			margin: 0px 0px 0px -10px;
+			width: 0;
+			height: 0;
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-top: 10px solid #fff;
+		}
+	}
+	&__image {
+		padding:0px 0px 37.51% 0px;
+	}
+	@media (max-width: 1000px) {
+			&__content {
+		padding:40px 35px 35px 35px;
+		}
+	}
+	@media (max-width: 750px) {
+		&_last{
+			.brands__column{
+				&:nth-child(1){
+					@include flexorder(2);
+				}
+				&:nth-child(2){
+					@include flexorder(1);
+				}
+				&:nth-child(3){
+					@include flexorder(3);
+				}
+				
+			}
+		}
+		&__row {
+			flex-direction:column;
+		}
+	}
+}
+.brends {
+	&__item {}
+}
+.item {
+	height: 100%;
+	display: block;
+	position: relative;
+	&__logo {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		@include flexbox();
+		flex-direction:column;
+		@include anim(0.3s, 0s);
+		justify-content: center;
+		align-items: center;
+		z-index: 2;
+		background-color: rgba(100, 194, 158, 0.5);
+		opacity: 0;
+		visibility: hidden;
+		span{
+			margin: 10px 0px 0px 0px;
+			font-size: 14px;
+			font-weight: 700;
+			letter-spacing: 2.8px;
+			text-transform: uppercase;
+			color: #fff;
+
+		}
+	}
+	&__image {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+	&:hover{
+		.item__logo{
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+	@media (max-width: 750px) {
+		height: auto;
+		padding:0px 0px 70% 0px;
+	}
+}
+// =========================
+.slider {
+	background-color: #f7f7f7;
+	padding:120px 0px 60px 0px;
+		@media (max-width: 750px) {
+		padding: 70px 0px 0px 0px;
+	}
+	&__body {
+		text-align: center;
+	}
+	&__item {
+		text-align: center;
+	}
+
+
+
+	&__icon {
+		margin: 0px 0px 35px 0px;
+	}
+	&__title {
+		color: #353738;
+		font-size: 18px;
+		font-weight: 700;
+		margin: 0px 0px 20px 0px;
+		span{
+			font-weight: 300;
+			color: #848789;
+		}
+	}
+	&__text {
+		text-align: center;
+		font-size: 24px;
+		font-style: italic;
+		line-height: 34px;
+		color: #848789;
+	}
+}
+// ====================
+.shop {
+	&__body {
+		@include flexbox();
+	}
+	&__column {
+		flex: 0 1 16.666%;
+		&_b {
+			flex: 0 1 33.3333%;
+		}
+	}
+	&__block {}
+	&__footer {
+		background-color: #282f35;
+		padding:75px 0px;
+		text-align: center;
+
+	}
+	&__btn {}
+	@media (max-width: 850px) {
+		&__footer {
+		padding:55px 0px;
+
+		}
+	}
+	@media (max-width: 900px) {
+		&__body {
+			flex-wrap:wrap;
+		}
+		&__column {
+			flex: 0 1 50%;
+			&:first-child{
+				flex: 1 1 100%;
+			}
+			&:last-child{
+				flex: 1 1 100%;
+			}
+		}
+	}
+}
+.block-shop {
+	
+	height: 100%;
+	&__row {
+		@include flexbox();
+	}
+	&__column {
+		flex: 0 1 50%;
+	}
+	&__item {
+		height: auto;
+		padding:0px 0px 50% 0px;
+		&_b{
+			padding:0px 0px 200% 0px;
+		}
+		&_l{
+			padding:0px 0px 100% 0px;
+		}
+	}
+}
+
+.footer {
+	text-align: center;
+}
+// =================
+.subscribe {
+	&__body {
+		padding:110px 0;
+		max-width: 534px;
+		margin: 0px auto;
+		text-align: center;
+	}
+	&__logo {
+		margin: 0px 0px 39px 0px;
+	}
+	&__label {
+		font-size: 22px;
+		font-style: italic;
+		line-height: 1.42;
+		color: #848789;
+		margin: 0px 0px 35px 0px;
+	}
+	&__form {
+		@include flexbox();
+
+	}
+	&__input {
+		flex: 1 1 auto;
+		padding:0px 8px 0px 0px;
+		.input{
+			width: 100%;
+			height: 69px;
+			border: 1px solid #d3d7d9;
+			background-color: #fff;
+			padding:0px 28px;
+			color: #929292;
+			font-size: 20px;
+			font-style: italic;
+			line-height: 24px;
+			&.focus{
+				font-style: normal;
+				color:#333;
+			}
+			&._form-error{
+				border: 2px solid red;
+
+
+			}
+		}
+	}
+	&__button {
+		flex:0 0 px;
+	}
+	&__btn {
+		width: 126px;
+		height: 69px;
+		background-color: #64c29e;
+		font-size: 24px;
+		line-height: 69px;
+		text-align: center;
+		color: #fff
+	}
+}
+
+// ======================
+.footer {
+	background-color: #f7f7f7;
+	padding:100px 0px;
+	@media (max-width: 1170px) {
+		padding:80px 30px;
+	}
+	&__row {
+		@include flexbox();
+		align-items: center;
+	}
+	&__column {
+		flex: 0 1 33.333%;
+	}
+	&__adress {
+		font-size: 14px;
+		font-style: italic;
+		line-height: 1.29;
+		color: #848789;
+		text-align: left;
+	}
+	&__social {}
+	&__dev {}
+	@media (max-width: 600px) {
+		padding:40px 10px;
+		&__row {
+			flex-direction: column;
+
+		}
+		&__adress {
+			text-align: center;
+		}
+		&__social {
+			margin: 15px 0px;
+		}
+	}
+}
+.social {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	&__link {
+		margin: 0px 0px 0px 12px;
+	}
+}
+.dev {
+	@include flexbox();
+	justify-content: flex-end;
+	align-items: center;
+	&__text {
+		font-size: 14px;
+		font-style: italic;
+		line-height: 1.29;
+		color: #848789;
+		 margin: 0px 8px 0px 0px;
+
+	}
+	&__icon {}
+}
+
+
+// Ограничивающий контейнер ======================================================================================================================================================================================================================
+
+/*
+(i) Стили будут применяться ко 
+всем классам содержащим *__container
+Например header__container, main__container и т.д.
+Снипет (HTML): cnt
+*/
+
+@if ($responsiveType==1) {
+	// Отзывчивая
+	[class*="__container"] {
+		@if ($maxWidthContainer>0) {
+			max-width: rem($maxWidthContainer);
+			box-sizing: content-box;
+			margin: 0 auto;
+		}
+		@if ($containerPadding>0) {
+			padding: 0 rem(math.div($containerPadding, 2));
+		}
+	}
+} @else {
+	// По брейк-поинтам
+	[class*="__container"] {
+		margin: 0 auto;
+		@if ($maxWidthContainer>0) {
+			max-width: rem($maxWidthContainer);
+			box-sizing: content-box;
+		} @else {
+			@if ($containerPadding>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+		@media (max-width: $pc) {
+			max-width: rem(970);
+		}
+		@media (max-width: $tablet) {
+			max-width: rem(750);
+		}
+		@media (max-width: $mobile) {
+			max-width: none;
+			@if ($containerPadding>0 and $maxWidthContainer>0) {
+				padding: 0 rem(math.div($containerPadding, 2));
+			}
+		}
+	}
+}
+
+
+
+
+@import "base/ibg";
+@import "base/slider";
+@import "base/forms/button";
+/*
+
+// Подключение базовых стилей, шаблонов (заготовок) и вспомогательных  классов
+// Для подключения/отключения конкретных стилей смотри base.scss
+@import "base";
+
+// Подключение стилей общих элементов проекта
+@import "common";
+
+// Подключение стилей отдельных блоков
+@import "header";
+@import "footer";
+
+// Подключение стилей отдельных страниц
+@import "home";
+
+
+*/
